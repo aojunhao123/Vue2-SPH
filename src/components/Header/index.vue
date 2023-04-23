@@ -57,10 +57,15 @@ export default {
       // 判断输入框是否为空
       if (!this.keyword.trim())
         return this.placeholderText = '搜索不能为空!'
-
-      this.$router.push({
+      let location = {
         name: 'search',
-      })
+        params: {
+          keyword: this.keyword
+        }
+      }
+      if (this.$route.query) location.query = this.$route.query
+      // 路由跳转
+      this.$router.push(location)
       // 清空输入框
       this.keyword = ''
       this.placeholderText = ''

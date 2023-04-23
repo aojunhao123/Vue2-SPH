@@ -45,7 +45,8 @@ const router = new VueRouter({
         },
         {
             name: 'search',
-            path: '/search',
+            // 声明params参数,'?'代表该参数非必要
+            path: '/search/:keyword?',
             component: Search
         },
         {

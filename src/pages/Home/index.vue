@@ -18,7 +18,7 @@ import Rank from "./Rank";
 import Like from "./Like";
 import Floor from "./Floor";
 import Brand from "./Brand";
-
+import { getCategoryList } from "@/api";
 export default {
   name: "Home",
   components: {
@@ -29,8 +29,10 @@ export default {
     Floor,
     Brand,
   },
+  mounted() {
+    
+  }
 };
 </script>
 
-<style>
-</style>
+<style></style>
