@@ -12,7 +12,7 @@ import Footer from '@/components/Footer'
 export default {
   name: 'App',
   components: {
-    Header,Footer
+    Header, Footer
   },
   // 由于三级分类菜单的数据只需要获取一次，因此在根组件挂载时获取
   mounted() {
@@ -22,5 +22,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

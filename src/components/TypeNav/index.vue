@@ -1,7 +1,45 @@
 <template>
   <div class="type-nav">
     <div class="container">
-      <h2 class="all">全部商品分类</h2>
+      <div @mouseenter="enterShow" @mouseleave="leaveShow">
+        <h2 class="all">全部商品分类</h2>
+        <!-- 给菜单添加过渡效果 -->
+        <transition name="sort">
+          <div class="sort" v-show="isShow">
+            <!-- 利用事件委派为三级分类菜单的所有列表绑定路由跳转 -->
+            <div class="all-sort-list2" @click.prevent="goSearch">
+              <!-- 一级菜单 -->
+              <div class="item" v-for="(item, index) in categoryList" :key="item.categoryId"
+                :class="{ active: currentIndex === index }" @mouseenter="showBlue(index)" @mouseleave="currentIndex = -1">
+                <h3>
+                  <a href="" :data-categoryName="item.categoryName" :data-category1Id="item.categoryId">{{
+                    item.categoryName
+                  }}</a>
+                </h3>
+                <!-- 二、三级菜单的父容器 -->
+                <div class="item-list clearfix" :style="{ display: currentIndex === index ? 'block' : 'none' }">
+                  <div class="subitem">
+                    <!-- 二级菜单 -->
+                    <dl class="fore" v-for="item2 in item.categoryChild" :key="item2.categoryId">
+                      <dt>
+                        <a href="" :data-categoryName="item2.categoryName" :data-category2Id="item2.categoryId">{{
+                          item2.categoryName }}</a>
+                      </dt>
+                      <dd>
+                        <!-- 三级菜单 -->
+                        <em v-for="item3 in item2.categoryChild" :key="item3.categoryId">
+                          <a href="" :data-categoryName="item3.categoryName" :data-category3Id="item3.categoryId">{{
+                            item3.categoryName }}</a>
+                        </em>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </transition>
+      </div>
       <nav class="nav">
         <a href="###">服装城</a>
         <a href="###">美妆馆</a>
@@ -12,57 +50,29 @@
         <a href="###">有趣</a>
         <a href="###">秒杀</a>
       </nav>
-      <div class="sort">
-        <div class="all-sort-list2">
-          <!-- 一级菜单 -->
-          <!-- 利用事件委派为三级分类菜单的所有列表绑定路由跳转 -->
-          <div class="item" v-for="(item, index) in categoryList" :key="item.categoryId"
-            :class="{ active: currentIndex === index }" @mouseenter="showBlue(index)" @mouseleave="currentIndex = -1"
-            @click.prevent="goSearch">
-            <h3>
-              <a href="" :data-categoryName="item.categoryName" :data-category1Id="item.categoryId">{{ item.categoryName
-              }}</a>
-            </h3>
-            <div class="item-list clearfix">
-              <div class="subitem">
-                <!-- 二级菜单 -->
-                <dl class="fore" v-for="item2 in item.categoryChild" :key="item2.categoryId">
-                  <dt>
-                    <a href="" :data-categoryName="item2.categoryName" :data-category2Id="item2.categoryId">{{
-                      item2.categoryName }}</a>
-                  </dt>
-                  <dd>
-                    <!-- 三级菜单 -->
-                    <em v-for="item3 in item2.categoryChild" :key="item3.categoryId">
-                      <a href="" :data-categoryName="item3.categoryName" :data-category3Id="item3.categoryId">{{
-                        item3.categoryName }}</a>
-                    </em>
-                  </dd>
-                </dl>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
+// 按需引入lodash的节流函数
+import throttle from 'lodash/throttle'
 import { mapState } from 'vuex';
 export default {
   name: "TypeNav",
   data() {
     return {
-      // 该属性用于动态控制三级菜单列表样式
+      // 该属性用于动态控制三级菜单列表样式(背景颜色)
       currentIndex: -1,
+      // 该属性用于动态控制菜单的显示与隐藏
+      isShow: true
     }
   },
   methods: {
     // 动态控制鼠标悬浮时列表的样式
-    showBlue(index) {
+    showBlue: throttle(function (index) {
       this.currentIndex = index
-    },
+    }, 20),
     // 从三级分类菜单跳转到search路由(默认携带query参数)
     goSearch(e) {
       // 🔴当用户点击菜单,我们需要区分用户点击是否为超链接;以及点的是三级菜单中的哪一级
@@ -93,24 +103,60 @@ export default {
         location.query = query
         this.$router.push(location)
       }
+    },
+
+    enterShow() {
+      if (this.$route.path !== '/')
+        this.isShow = true
+    },
+    leaveShow() {
+      this.currentIndex = -1
+      if (this.$route.path !== '/')
+        this.isShow = false
     }
+
   },
   computed: {
     ...mapState({ categoryList: (state) => state.home.categoryList })
+  },
+  // 每次执行路由跳转时该函数都会被调用
+  mounted() {
+    // 判断当前路由是否为home,若不是则将三级菜单进行隐藏
+    if (this.$route.path !== '/') {
+      this.isShow = false
+    }
   }
 };
 </script>
 
 <style lang="less" scoped>
+// 过渡动画开始状态
+.sort-enter {
+  opacity: 0;
+}
+
+// 过渡动画进行状态(设置动画的表现形式)
+.sort-enter-active {
+  transition: all .5s linear;
+}
+
+// 过渡动画结束状态
+.sort-enter-to {
+  opacity: 1;
+}
+
 .type-nav {
   border-bottom: 2px solid #e1251b;
 
   .active {
     background-color: skyblue;
 
-    a {
-      text-decoration: none;
+    h3 {
+      a {
+        text-decoration: none;
+      }
     }
+
 
   }
 
@@ -150,6 +196,7 @@ export default {
       position: absolute;
       background: #fafafa;
       z-index: 999;
+
 
       .all-sort-list2 {
         .item {
@@ -220,11 +267,11 @@ export default {
             }
           }
 
-          &:hover {
-            .item-list {
-              display: block;
-            }
-          }
+          // &:hover {
+          //   .item-list {
+          //     display: block;
+          //   }
+          // }
         }
       }
     }
