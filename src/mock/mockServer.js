@@ -13,6 +13,6 @@ import floors from './floors'
     参数二:请求方式(默认为get,可不写)
     参数三:请求数据
  */
-// 模拟数据
+// 模拟数据(创建模拟接口)
 Mock.mock('/mock/banners',{code:200,data:banners})
 Mock.mock('/mock/floors',{code:200,data:floors})
