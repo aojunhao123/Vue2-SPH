@@ -3,19 +3,20 @@
     <div class="sortList clearfix">
       <div class="center">
         <!--banner轮播-->
-        <div class="swiper-container" id="mySwiper">
+        <!-- <div class="swiper-container" id="mySwiper">
           <div class="swiper-wrapper">
             <div class="swiper-slide" v-for="item in bannerList" :key="item.id">
               <img :src="item.imgUrl" />
             </div>
           </div>
-          <!-- 如果需要分页器 -->
+          
           <div class="swiper-pagination"></div>
 
-          <!-- 如果需要导航按钮 -->
+         
           <div class="swiper-button-prev"></div>
           <div class="swiper-button-next"></div>
-        </div>
+        </div> -->
+        <Carousel :list="bannerList"></Carousel>
       </div>
       <div class="right">
         <div class="news">
@@ -93,94 +94,67 @@
 <script>
 // 需要使用swiper的组件中引入
 // import Swiper from 'swiper/swiper-bundle.min.js'
-import { Swiper, Navigation, Pagination, Autoplay } from 'swiper'
+// import { Swiper, Navigation, Pagination, Autoplay } from 'swiper'
 import { mapState } from 'vuex'
 export default {
   computed: {
     ...mapState({ bannerList: state => state.home.bannerList })
   },
-  watch: {
-    bannerList: {
-      handler() {
-        this.$nextTick(() => {
-          // new Swiper('#mySwiper', {
-          //   // 无限循环
-          //   loop: true,
-          //   // 自动切换
-          //   autoplay: {
-          //     disableOnInteraction: false,
-          //   },
-          //   // 如果需要分页器
-          //   pagination: {
-          //     el: '.swiper-pagination'
-          //   },
-          //   // 如果需要前进后退按钮
-          //   navigation: {
-          //     nextEl: '.swiper-button-next',
-          //     prevEl: '.swiper-button-prev',
-          //     // 添加该样式则前进后退按钮会被隐藏
-          //     // hiddenClass: 'my-button-hidden'
-          //   },
-          // })
-          Swiper.use([Navigation, Pagination, Autoplay])
-          new Swiper('#mySwiper', {
-            // 无限循环
-            loop: true,
-            // 自动切换
-            autoplay: {
-              disableOnInteraction: false,
-            },
-            // 如果需要分页器
-            pagination: {
-              el: '.swiper-pagination'
-            },
-            // 如果需要前进后退按钮
-            navigation: {
-              nextEl: '.swiper-button-next',
-              prevEl: '.swiper-button-prev',
-              // 添加该样式则前进后退按钮会被隐藏
-              // hiddenClass: 'my-button-hidden'
-            },
-          })
-        })
-      }
-    }
-  },
+  // watch: {
+  //   bannerList: {
+  //     handler() {
+  //       this.$nextTick(() => {
+  //         // new Swiper('#mySwiper', {
+  //         //   // 无限循环
+  //         //   loop: true,
+  //         //   // 自动切换
+  //         //   autoplay: {
+  //         //     disableOnInteraction: false,
+  //         //   },
+  //         //   // 如果需要分页器
+  //         //   pagination: {
+  //         //     el: '.swiper-pagination'
+  //         //   },
+  //         //   // 如果需要前进后退按钮
+  //         //   navigation: {
+  //         //     nextEl: '.swiper-button-next',
+  //         //     prevEl: '.swiper-button-prev',
+  //         //     // 添加该样式则前进后退按钮会被隐藏
+  //         //     // hiddenClass: 'my-button-hidden'
+  //         //   },
+  //         // })
+  //         Swiper.use([Navigation, Pagination, Autoplay])
+  //         new Swiper('#mySwiper', {
+  //           // 无限循环
+  //           loop: true,
+  //           // 自动切换
+  //           autoplay: {
+  //             // 用户操作后也不影响轮播图的自动播放
+  //             disableOnInteraction: false,
+  //           },
+  //           // 如果需要分页器
+  //           pagination: {
+  //             el: '.swiper-pagination'
+  //           },
+  //           // 如果需要前进后退按钮
+  //           navigation: {
+  //             nextEl: '.swiper-button-next',
+  //             prevEl: '.swiper-button-prev',
+  //             // 添加该样式则前进后退按钮会被隐藏
+  //             // hiddenClass: 'my-button-hidden'
+  //           },
+  //         })
+  //       })
+  //     }
+  //   }
+  // },
   mounted() {
     this.$store.dispatch('bannerList')
-    // new Swiper('.swiper-container', {
-    //   // 无限循环
-    //   loop: true,
-    //   // 自动切换
-    //   autoplay: true,
-    //   // 如果需要分页器
-    //   pagination: {
-    //     el: '.swiper-pagination'
-    //   },
-    //   // 如果需要前进后退按钮
-    //   navigation: {
-    //     nextEl: '.swiper-button-next',
-    //     prevEl: '.swiper-button-prev',
-    //   },
-    // })
   },
 };
 </script>
 
 <style lang="less" scoped>
-.swiper-button-prev,
-.swiper-button-next {
-  display: none;
-}
-
-#mySwiper:hover {
-
-  .swiper-button-prev,
-  .swiper-button-next {
-    display: block;
-  }
-}
-
 .list-container {
   width: 1200px;
   margin: 0 auto;

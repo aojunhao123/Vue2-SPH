@@ -22,19 +22,20 @@
               <img :src="list.imgUrl" />
             </div>
             <div class="floorBanner">
-              <div class="swiper-container" id="floorSwiper">
+              <!-- <div class="swiper-container" id="floorSwiper">
                 <div class="swiper-wrapper">
-                  <div class="swiper-slide" v-for="(item, index) in list.carouselList" :key="index">
+                  <div class="swiper-slide" v-for="item in list.carouselList" :key="item.id">
                     <img :src="item.imgUrl" />
                   </div>
                 </div>
-                <!-- 如果需要分页器 -->
+                
                 <div class="swiper-pagination"></div>
 
-                <!-- 如果需要导航按钮 -->
+                
                 <div class="swiper-button-prev"></div>
                 <div class="swiper-button-next"></div>
-              </div>
+              </div> -->
+            <Carousel :list="list.carouselList"></Carousel>
             </div>
             <div class="split">
               <span class="floor-x-line"></span>
@@ -66,24 +67,24 @@
 
 <script>
 // import Swiper from 'swiper/swiper-bundle.min.js'
-import { Swiper, Navigation, Pagination, Autoplay } from 'swiper'
+// import { Swiper, Navigation, Pagination, Autoplay } from 'swiper'
 export default {
   props: ['list'],
   mounted() {
-    Swiper.use([Navigation, Pagination, Autoplay])
-    new Swiper('#floorSwiper', {
-      loop:true,
-      // 如果需要分页器
-      pagination: {
-        el: '.swiper-pagination'
-      },
-      // 如果需要前进后退按钮
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
+    // Swiper.use([Navigation, Pagination, Autoplay])
+    // new Swiper('#floorSwiper', {
+    //   loop:true,
+    //   // 如果需要分页器
+    //   pagination: {
+    //     el: '.swiper-pagination'
+    //   },
+    //   // 如果需要前进后退按钮
+    //   navigation: {
+    //     nextEl: '.swiper-button-next',
+    //     prevEl: '.swiper-button-prev',
+    //   },
 
-    })
+    // })
   }
 };
 </script>

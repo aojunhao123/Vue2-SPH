@@ -43,7 +43,6 @@ const home = {
         },
         async floorList({ commit }) {
             let result = await getFloorList()
-            console.log(result)
             if (result.code === 200) {
                 commit('FLOORLIST', result.data)
             }
@@ -51,7 +50,7 @@ const home = {
     },
     // 计算属性 
     getters: {
-        
+
     }
 }
 
