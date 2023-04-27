@@ -9,7 +9,8 @@ import TypeNav from '@/components/TypeNav'
 // 引入mock数据
 import '@/mock/mockServer'
 // 引入swiper样式
-import 'swiper/swiper-bundle.css'
+import 'swiper/swiper.min.css'
+import 'swiper/swiper-bundle.min.css'
 // 注册全局组件
 // 参数一：组件名，参数二：组件
 Vue.component(TypeNav.name,TypeNav)

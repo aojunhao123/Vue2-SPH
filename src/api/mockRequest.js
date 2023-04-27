@@ -24,7 +24,7 @@ request.interceptors.response.use(response => {
     // 对响应数据做点什么
     // 进度条结束
     nProgress.done()
-    return response;
+    return response.data;
 }, err => {
     // 响应失败,处理错误结果
     return Promise.reject(err)

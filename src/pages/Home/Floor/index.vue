@@ -3,29 +3,11 @@
   <div class="floor">
     <div class="py-container">
       <div class="title clearfix">
-        <h3 class="fl">家用电器</h3>
+        <h3 class="fl">{{ list.name }}</h3>
         <div class="fr">
           <ul class="nav-tabs clearfix">
-            <li class="active">
-              <a href="#tab1" data-toggle="tab">热门</a>
-            </li>
-            <li>
-              <a href="#tab2" data-toggle="tab">大家电</a>
-            </li>
-            <li>
-              <a href="#tab3" data-toggle="tab">生活电器</a>
-            </li>
-            <li>
-              <a href="#tab4" data-toggle="tab">厨房电器</a>
-            </li>
-            <li>
-              <a href="#tab5" data-toggle="tab">应季电器</a>
-            </li>
-            <li>
-              <a href="#tab6" data-toggle="tab">空气/净水</a>
-            </li>
-            <li>
-              <a href="#tab7" data-toggle="tab">高端电器</a>
+            <li v-for="(item, index) in list.navList" :key="index">
+              <a href="#tab1" data-toggle="tab">{{ item.text }}</a>
             </li>
           </ul>
         </div>
@@ -35,26 +17,15 @@
           <div class="floor-1">
             <div class="blockgary">
               <ul class="jd-list">
-                <li>节能补贴</li>
-                <li>4K电视</li>
-                <li>空气净化器</li>
-                <li>IH电饭煲</li>
-                <li>滚筒洗衣机</li>
-                <li>电热水器</li>
+                <li v-for="(item, index) in list.keywords" :key="index">{{ item }}</li>
               </ul>
-              <img src="./images/floor-1-1.png" />
+              <img :src="list.imgUrl" />
             </div>
             <div class="floorBanner">
-              <div class="swiper-container" id="floor1Swiper">
+              <div class="swiper-container" id="floorSwiper">
                 <div class="swiper-wrapper">
-                  <div class="swiper-slide">
-                    <img src="./images/floor-1-b01.png" />
-                  </div>
-                  <div class="swiper-slide">
-                    <img src="./images/floor-1-b02.png" />
-                  </div>
-                  <div class="swiper-slide">
-                    <img src="./images/floor-1-b03.png" />
+                  <div class="swiper-slide" v-for="(item, index) in list.carouselList" :key="index">
+                    <img :src="item.imgUrl" />
                   </div>
                 </div>
                 <!-- 如果需要分页器 -->
@@ -68,10 +39,10 @@
             <div class="split">
               <span class="floor-x-line"></span>
               <div class="floor-conver-pit">
-                <img src="./images/floor-1-2.png" />
+                <img :src="list.recommendList[0]" />
               </div>
               <div class="floor-conver-pit">
-                <img src="./images/floor-1-3.png" />
+                <img :src="list.recommendList[1]" />
               </div>
             </div>
             <div class="split center">
@@ -80,10 +51,10 @@
             <div class="split">
               <span class="floor-x-line"></span>
               <div class="floor-conver-pit">
-                <img src="./images/floor-1-5.png" />
+                <img :src="list.recommendList[2]" />
               </div>
               <div class="floor-conver-pit">
-                <img src="./images/floor-1-6.png" />
+                <img :src="list.recommendList[3]" />
               </div>
             </div>
           </div>
@@ -94,7 +65,27 @@
 </template>
 
 <script>
-export default {};
+// import Swiper from 'swiper/swiper-bundle.min.js'
+import { Swiper, Navigation, Pagination, Autoplay } from 'swiper'
+export default {
+  props: ['list'],
+  mounted() {
+    Swiper.use([Navigation, Pagination, Autoplay])
+    new Swiper('#floorSwiper', {
+      loop:true,
+      // 如果需要分页器
+      pagination: {
+        el: '.swiper-pagination'
+      },
+      // 如果需要前进后退按钮
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+
+    })
+  }
+};
 </script>
 
 <style lang="less" scoped>
@@ -122,9 +113,17 @@ export default {};
           margin: 10px 0 0;
           display: inline-block;
 
+
+
           li {
             float: left;
             line-height: 18px;
+
+            &:first-child {
+              a {
+                color: #e1251b
+              }
+            }
 
             a {
               padding-top: 1px;

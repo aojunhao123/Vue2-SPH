@@ -92,21 +92,44 @@
 
 <script>
 // 需要使用swiper的组件中引入
-import Swiper from 'swiper/swiper-bundle.min.js'
+// import Swiper from 'swiper/swiper-bundle.min.js'
+import { Swiper, Navigation, Pagination, Autoplay } from 'swiper'
 import { mapState } from 'vuex'
 export default {
   computed: {
-    ...mapState({ bannerList: (state) => state.home.bannerList })
+    ...mapState({ bannerList: state => state.home.bannerList })
   },
   watch: {
     bannerList: {
       handler() {
         this.$nextTick(() => {
+          // new Swiper('#mySwiper', {
+          //   // 无限循环
+          //   loop: true,
+          //   // 自动切换
+          //   autoplay: {
+          //     disableOnInteraction: false,
+          //   },
+          //   // 如果需要分页器
+          //   pagination: {
+          //     el: '.swiper-pagination'
+          //   },
+          //   // 如果需要前进后退按钮
+          //   navigation: {
+          //     nextEl: '.swiper-button-next',
+          //     prevEl: '.swiper-button-prev',
+          //     // 添加该样式则前进后退按钮会被隐藏
+          //     // hiddenClass: 'my-button-hidden'
+          //   },
+          // })
+          Swiper.use([Navigation, Pagination, Autoplay])
           new Swiper('#mySwiper', {
             // 无限循环
             loop: true,
             // 自动切换
-            autoplay: true,
+            autoplay: {
+              disableOnInteraction: false,
+            },
             // 如果需要分页器
             pagination: {
               el: '.swiper-pagination'
@@ -115,6 +138,8 @@ export default {
             navigation: {
               nextEl: '.swiper-button-next',
               prevEl: '.swiper-button-prev',
+              // 添加该样式则前进后退按钮会被隐藏
+              // hiddenClass: 'my-button-hidden'
             },
           })
         })
@@ -143,6 +168,19 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.swiper-button-prev,
+.swiper-button-next {
+  display: none;
+}
+
+#mySwiper:hover {
+
+  .swiper-button-prev,
+  .swiper-button-next {
+    display: block;
+  }
+}
+
 .list-container {
   width: 1200px;
   margin: 0 auto;
