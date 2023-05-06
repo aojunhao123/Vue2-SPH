@@ -7,9 +7,10 @@ Vue.use(Vuex)
 
 // 引入其他模块的store
 import home from "./home";
+import search from "./search";
 
 export default new Vuex.Store({
     modules: {
-        home
+        home, search
     }
 })
