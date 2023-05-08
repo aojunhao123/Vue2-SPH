@@ -6,8 +6,9 @@
             <div class="value logos">
                 <!-- 商标 -->
                 <ul class="logo-list">
-                    <li>索尼（SONY）</li>
-                    <li>TCL</li>
+                    <li v-for="item in trademarkList" :key="item.tmId" @click="tmHandler(item)">{{ item.tmName }}
+                    </li>
+                    <!-- <li>TCL</li>
                     <li>长虹（CHANGHONG）</li>
                     <li>飞利浦（PHILIPS）</li>
                     <li>风行电视</li>
@@ -23,7 +24,7 @@
                     <li><img src="./images/phone01.png" /></li>
                     <li><img src="./images/phone06.png" /></li>
                     <li><img src="./images/phone07.png" /></li>
-                    <li><img src="./images/phone02.png" /></li>
+                    <li><img src="./images/phone02.png" /></li> -->
                 </ul>
             </div>
             <div class="ext">
@@ -31,45 +32,19 @@
                 <a href="javascript:void(0);">更多</a>
             </div>
         </div>
-        <div class="type-wrap">
-            <div class="fl key">网络制式</div>
+        <!-- 平台为商品添加的属性(tag) -->
+        <div class="type-wrap" v-for="item in attrsList" :key="item.attrId">
+            <div class="fl key">{{ item.attrName }}</div>
             <div class="fl value">
                 <ul class="type-list">
-                    <li>
-                        <a>GSM（移动/联通2G）</a>
-                    </li>
-                    <li>
-                        <a>电信2G</a>
-                    </li>
-                    <li>
-                        <a>电信3G</a>
-                    </li>
-                    <li>
-                        <a>移动3G</a>
-                    </li>
-                    <li>
-                        <a>联通3G</a>
-                    </li>
-                    <li>
-                        <a>联通4G</a>
-                    </li>
-                    <li>
-                        <a>电信3G</a>
-                    </li>
-                    <li>
-                        <a>移动3G</a>
-                    </li>
-                    <li>
-                        <a>联通3G</a>
-                    </li>
-                    <li>
-                        <a>联通4G</a>
+                    <li v-for="(item2, index) in item.attrValueList" :key="index" @click="attrHandler(item.attrId,item2,item.attrName)">
+                        <a>{{ item2 }}</a>
                     </li>
                 </ul>
             </div>
             <div class="fl ext"></div>
         </div>
-        <div class="type-wrap">
+        <!-- <div class="type-wrap">
             <div class="fl key">显示屏尺寸</div>
             <div class="fl value">
                 <ul class="type-list">
@@ -156,13 +131,26 @@
             </div>
             <div class="fl ext">
             </div>
-        </div>
+        </div> -->
     </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
-
+    computed: {
+        ...mapGetters(['trademarkList'])
+    },
+    props: ['attrsList'],
+    methods: {
+        tmHandler(trademark) {
+            // 触发自定义事件将品牌信息传递给search组件
+            this.$emit('getTrademark', trademark)
+        },
+        attrHandler(id,attr,type) {
+            this.$emit('getProps',id,attr,type)
+        }
+    }
 }
 </script>
 <style lang="less" scoped>

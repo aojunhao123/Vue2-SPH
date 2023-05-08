@@ -20,7 +20,6 @@ import { Swiper, Navigation, Pagination, Autoplay } from 'swiper'
 export default {
     name: 'Carousel',
     props: ['list'],
-    mounted() {},
     watch: {
         list: {
             immediate: true,

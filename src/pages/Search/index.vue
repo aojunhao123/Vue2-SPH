@@ -12,14 +12,22 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x">手机</li>
-            <li class="with-x">iphone<i>×</i></li>
-            <li class="with-x">华为<i>×</i></li>
-            <li class="with-x">OPPO<i>×</i></li>
+            <!-- 商品分类 -->
+            <li class="with-x" v-if="searchParams.categoryName">{{ searchParams.categoryName }}<i
+                @click="removeCategoryName">×</i></li>
+            <!-- 用户搜索关键字 -->
+            <li class="with-x" v-if="searchParams.keyword">{{ searchParams.keyword }}<i @click="removeKeyword">×</i></li>
+            <!-- 商品品牌 -->
+            <li class="with-x" v-if="searchParams.trademark">{{ searchParams.trademark.split(':')[1] }}<i
+                @click="removeTrademark">×</i>
+            </li>
+            <!-- 商品属性(tag) -->
+            <li class="with-x" v-for="(item, index) in searchParams.props" :key="index">{{ item.split(':')[1] }}<i
+                @click="removeAttr">×</i></li>
           </ul>
         </div>
         <!-- selector -->
-        <Selector></Selector>
+        <Selector :attrsList="attrsList" @getTrademark="getTrademark" @getProps="getProps"></Selector>
         <!--details-->
         <div class="details clearfix">
           <div class="sui-navbar">
@@ -232,6 +240,66 @@ export default {
     // 将派发action获取数据的操作封装在函数中，提高复用性
     getData() {
       this.$store.dispatch('searchList', this.searchParams)
+    },
+    // 删除面包屑导航中的分类名
+    removeCategoryName() {
+      // 将查询参数中相应参数置为undefined(该参数不会发送给服务器,节省带宽)
+      this.searchParams.categoryName = undefined
+      this.removeId()
+      // 重新发送请求更新页面
+      this.getData()
+      // 此判断是为了确保清除地址栏中的query参数且保留params参数
+      if (this.$route.params) {
+        this.$router.push({ name: 'search', params: this.$route.params })
+      }
+    },
+    // 删除面包屑导航中的关键字
+    removeKeyword() {
+      this.searchParams.keyword = undefined
+      this.getData()
+      if (this.$route.query) {
+        this.$router.push({ name: 'search', query: this.$route.query })
+      }
+    },
+    // 删除面包屑导航中的品牌
+    removeTrademark() {
+      this.searchParams.trademark = undefined
+      this.getData()
+    },
+    // 删除面包屑导航中的平台售卖属性
+    removeAttr() {
+      // 将该数组置空
+      this.searchParams.props = []
+      this.getData()
+    },
+    // 将清除分类id的操作单独封装成函数
+    removeId() {
+      this.searchParams.category1Id = undefined
+      this.searchParams.category2Id = undefined
+      this.searchParams.category3Id = undefined
+    },
+    // 该函数用于接收子组件selector传递来的trademark数据
+    getTrademark(trademark) {
+      this.searchParams.trademark = `${trademark.tmId}:${trademark.tmName}`
+      // 重新发起请求
+      this.getData()
+    },
+    // 该函数用于接收子组件selector传递来的props数据
+    getProps(id, attr, type) {
+      this.searchParams.props = [`${id}:${attr}:${type}`]
+      // 重新发起请求
+      this.getData()
+    }
+  },
+  // 对路由实例进行监视,当携带参数发生变化时进行相应的页面变化
+  watch: {
+    $route() {
+      // 路由发生变化时重新收集并合并参数
+      Object.assign(this.searchParams, this.$route.query, this.$route.params)
+      // 将整理好的参数发送给服务器
+      this.getData()
+      // 参数发送给服务器后将分类id清除(初始化)
+      this.removeId()
     }
   },
   // 我们需要收集用户操作后的参数并发送给服务器,并根据参数给用户显示相应的页面
