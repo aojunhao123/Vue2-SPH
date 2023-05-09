@@ -23,7 +23,7 @@
             </li>
             <!-- 商品属性(tag) -->
             <li class="with-x" v-for="(item, index) in searchParams.props" :key="index">{{ item.split(':')[1] }}<i
-                @click="removeAttr">×</i></li>
+                @click="removeAttr(index)">×</i></li>
           </ul>
         </div>
         <!-- selector -->
@@ -33,23 +33,22 @@
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <!-- 动态绑定active样式 -->
+                <li :class="{ active: searchParams.order.includes('1') }">
+                  <a href="javascript:;" @click="toggleTotalOrder">综合
+                    <!-- 动态决定箭头的显示以及上下朝向 -->
+                    <i class="iconfont"
+                      :class="{ 'icon-paixu': searchParams.order.includes('1:desc'), 'icon-xiangshang': searchParams.order.includes('1:asc') }">
+                    </i>
+                  </a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
-                </li>
-                <li>
-                  <a href="#">新品</a>
-                </li>
-                <li>
-                  <a href="#">评价</a>
-                </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li :class="{ active: searchParams.order.includes('2') }">
+                  <a href="javascript:;" @click="togglePriceOrder">价格
+                    <!-- 动态决定箭头的显示以及上下朝向 -->
+                    <i class="iconfont"
+                      :class="{ 'icon-paixu': searchParams.order.includes('2:desc'), 'icon-xiangshang': searchParams.order.includes('2:asc') }">
+                    </i>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -83,35 +82,7 @@
             </ul>
           </div>
           <!-- 分页器 -->
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
-          </div>
+          <Pagination :total="91" :pageSize="5" :continues="5"></Pagination>
         </div>
         <!--hotsale-->
         <div class="clearfix hot-sale">
@@ -219,8 +190,9 @@ export default {
         categoryName: '',
         // 用户搜索框输入的关键字
         keyword: '',
-        // 商品的排序(价格升/降序)
-        order: '',
+        // 商品的排序(价格/综合 升/降序)
+        // 初始默认值为综合降序
+        order: '1:desc',
         // 商品页当前页码(初始默认值为1)
         pageNo: 1,
         // 每页最多展示数据条数
@@ -267,9 +239,9 @@ export default {
       this.getData()
     },
     // 删除面包屑导航中的平台售卖属性
-    removeAttr() {
-      // 将该数组置空
-      this.searchParams.props = []
+    removeAttr(index) {
+      // 将数组中相应元素清除
+      this.searchParams.props.splice(index, 1)
       this.getData()
     },
     // 将清除分类id的操作单独封装成函数
@@ -286,10 +258,53 @@ export default {
     },
     // 该函数用于接收子组件selector传递来的props数据
     getProps(id, attr, type) {
-      this.searchParams.props = [`${id}:${attr}:${type}`]
+      // 整理参数格式
+      let props = `${id}:${attr}:${type}`
+      // 向数组中添加数据
+      // 判断数组中是否有该元素
+      if (this.searchParams.props.indexOf(props) === -1)
+        this.searchParams.props.push(props)
       // 重新发起请求
       this.getData()
-    }
+    },
+    // 切换商品综合排序
+    toggleTotalOrder() {
+      // 判断此时商品是综合排序还是价格排序
+      if (this.searchParams.order.includes('1')) {
+        // 进入此判断则为综合排序
+        // 判断此时商品是升序还是降序
+        if (this.searchParams.order.includes('desc'))
+          this.searchParams.order = '1:asc'
+        else this.searchParams.order = '1:desc'
+        // 重新发送请求
+        this.getData()
+      }
+      else {
+        // 进入此判断则当前商品为价格排序
+        // 从价格排序切换到综合排序时默认为降序
+        this.searchParams.order = '1:desc'
+        this.getData()
+      }
+    },
+    // 切换商品价格排序
+    togglePriceOrder() {
+      // 判断此时商品是综合排序还是价格排序
+      if (this.searchParams.order.includes('2')) {
+        // 进入此判断则为价格排序
+        // 判断此时商品是升序还是降序
+        if (this.searchParams.order.includes('desc'))
+          this.searchParams.order = '2:asc'
+        else this.searchParams.order = '2:desc'
+        // 重新发送请求
+        this.getData()
+      }
+      else {
+        // 进入此判断则当前商品为综合排序
+        // 从综合排序切换到价格排序时默认为降序
+        this.searchParams.order = '2:desc'
+        this.getData()
+      }
+    },
   },
   // 对路由实例进行监视,当携带参数发生变化时进行相应的页面变化
   watch: {
@@ -525,6 +540,12 @@ export default {
                 padding: 11px 15px;
                 color: #777;
                 text-decoration: none;
+
+                i {
+                  position: relative;
+                  left: 3px;
+                  bottom: -2px;
+                }
               }
 
               &.active {
@@ -657,94 +678,6 @@ export default {
                 }
               }
             }
-          }
-        }
-      }
-
-      .page {
-        width: 733px;
-        height: 66px;
-        overflow: hidden;
-        float: right;
-
-        .sui-pagination {
-          margin: 18px 0;
-
-          ul {
-            margin-left: 0;
-            margin-bottom: 0;
-            vertical-align: middle;
-            width: 490px;
-            float: left;
-
-            li {
-              line-height: 18px;
-              display: inline-block;
-
-              a {
-                position: relative;
-                float: left;
-                line-height: 18px;
-                text-decoration: none;
-                background-color: #fff;
-                border: 1px solid #e0e9ee;
-                margin-left: -1px;
-                font-size: 14px;
-                padding: 9px 18px;
-                color: #333;
-              }
-
-              &.active {
-                a {
-                  background-color: #fff;
-                  color: #e1251b;
-                  border-color: #fff;
-                  cursor: default;
-                }
-              }
-
-              &.prev {
-                a {
-                  background-color: #fafafa;
-                }
-              }
-
-              &.disabled {
-                a {
-                  color: #999;
-                  cursor: default;
-                }
-              }
-
-              &.dotted {
-                span {
-                  margin-left: -1px;
-                  position: relative;
-                  float: left;
-                  line-height: 18px;
-                  text-decoration: none;
-                  background-color: #fff;
-                  font-size: 14px;
-                  border: 0;
-                  padding: 9px 18px;
-                  color: #333;
-                }
-              }
-
-              &.next {
-                a {
-                  background-color: #fafafa;
-                }
-              }
-            }
-          }
-
-          div {
-            color: #333;
-            font-size: 14px;
-            float: right;
-            margin-top: 10px;
-            width: 241px;
           }
         }
       }
