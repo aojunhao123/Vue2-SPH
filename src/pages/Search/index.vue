@@ -82,7 +82,8 @@
             </ul>
           </div>
           <!-- 分页器 -->
-          <Pagination :total="91" :pageSize="5" :continues="5"></Pagination>
+          <Pagination :total="total" :pageSize="searchParams.pageSize" :pageNo="searchParams.pageNo" :continues="5"
+            @getPageNo="getPageNo"></Pagination>
         </div>
         <!--hotsale-->
         <div class="clearfix hot-sale">
@@ -175,7 +176,7 @@
 
 <script>
 import Selector from './Selector'
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 export default {
   components: { Selector },
   data() {
@@ -206,7 +207,10 @@ export default {
   },
   computed: {
     ...mapGetters(['goodsList']),
-    ...mapGetters(['attrsList'])
+    ...mapGetters(['attrsList']),
+    ...mapState({
+      total: (state) => state.search.searchList.total
+    })
   },
   methods: {
     // 将派发action获取数据的操作封装在函数中，提高复用性
@@ -305,6 +309,12 @@ export default {
         this.getData()
       }
     },
+    // 获取子组件pagination传递的页码
+    getPageNo(pageNo) {
+      this.searchParams.pageNo = pageNo
+      // 重新发送请求
+      this.getData()
+    }
   },
   // 对路由实例进行监视,当携带参数发生变化时进行相应的页面变化
   watch: {
