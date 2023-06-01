@@ -35,10 +35,15 @@ import Home from '@/pages/Home'
 import Search from '@/pages/Search'
 import Login from '@/pages/Login'
 import Register from '@/pages/Register'
+import Detail from '@/pages/Detail'
 
 // 创建路由实例对象管理路由映射
 const router = new VueRouter({
     routes: [
+        {
+            path: '/detail/:skuId',
+            component: Detail
+        },
         {
             path: '/',
             component: Home
@@ -57,7 +62,11 @@ const router = new VueRouter({
             path: '/register',
             component: Register
         }
-    ]
+    ],
+    // 控制页面滚动行为
+    scrollBehavior(to, from, savedPosition) {
+        return { x: 0, y: 0 }
+    }
 })
 
 export default router
