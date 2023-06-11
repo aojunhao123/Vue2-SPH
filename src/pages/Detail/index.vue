@@ -72,11 +72,11 @@
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <input autocomplete="off" class="itxt" :value="skuInfo.isSale">
-                <a href="javascript:" class="plus">+</a>
-                <a href="javascript:" class="mins">-</a>
+                <input autocomplete="off" class="itxt" v-model="skuNum" @change="changeSkuNum">
+                <a href="javascript:" class="plus" @click="skuNum++">+</a>
+                <a href="javascript:" class="mins" @click="skuNum > 1 ? skuNum-- : skuNum = 1">-</a>
               </div>
-              <div class="add">
+              <div class="add" @click="addToCart">
                 <a href="javascript:">加入购物车</a>
               </div>
             </div>
@@ -334,6 +334,12 @@ import { mapState, mapGetters } from 'vuex';
 
 export default {
   name: 'Detail',
+  data() {
+    return {
+      // 商品售卖数量(默认为1)
+      skuNum: 1
+    }
+  },
   components: {
     ImageList,
     Zoom
@@ -351,6 +357,34 @@ export default {
     changeActive(itemList, item) {
       itemList.forEach(item => item.isChecked = "0")
       item.isChecked = "1"
+    },
+    // 修改商品售卖数量
+    changeSkuNum(e) {
+      let value = e.target.value * 1
+      // 处理用户可能输入的非法数据
+      // 非数字|负数
+      if (value === NaN || value < 0) {
+        this.skuNum = 1
+      }
+      // 小数
+      else {
+        // 取整数部分
+        this.skuNum = parseInt(value)
+      }
+    },
+    // 添加商品进购物车
+    async addToCart() {
+      // 将购物车中的商品数据发送给服务器
+      try {
+        await this.$store.dispatch('addOrUpdateCart', { skuId: this.$route.params.skuId, skuNum: this.skuNum })
+        // 成功则跳转路由
+        this.$router.push({ name: 'addcartsuccess', query: { skuNum: this.skuNum } })
+        // 将目标路由所需要的数据存入sessionStorage中
+        sessionStorage.setItem('skuInfo', JSON.stringify(this.skuInfo))
+      } catch (error) {
+        // 失败打印错误信息
+        alert(error.message)
+      }
     }
   },
   mounted() {

@@ -13,7 +13,7 @@
 <script>
 
 // 引入swiper及其功能模块
-import { Swiper, Navigation, Pagination, Autoplay } from 'swiper'
+import { Swiper, Navigation } from 'swiper'
 
 export default {
   name: "ImageList",
@@ -28,7 +28,7 @@ export default {
     toggleImage(index) {
       this.curIndex = index
       // 在需要发送数据的组件中触发总线回调
-      this.$bus.$emit('getImage',this.skuImageList[index])
+      this.$bus.$emit('getImage', this.skuImageList[index])
     }
   },
   watch: {

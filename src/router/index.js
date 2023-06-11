@@ -36,7 +36,8 @@ import Search from '@/pages/Search'
 import Login from '@/pages/Login'
 import Register from '@/pages/Register'
 import Detail from '@/pages/Detail'
-
+import AddCartSuccess from '@/pages/AddCartSuccess'
+import ShopCart from '@/pages/ShopCart'
 // 创建路由实例对象管理路由映射
 const router = new VueRouter({
     routes: [
@@ -61,12 +62,21 @@ const router = new VueRouter({
         {
             path: '/register',
             component: Register
+        },
+        {
+            name: 'addcartsuccess',
+            path: '/addcartsuccess',
+            component: AddCartSuccess
+        },
+        {
+            path: '/shopcart',
+            component:ShopCart
         }
     ],
     // 控制页面滚动行为
     scrollBehavior(to, from, savedPosition) {
         return { x: 0, y: 0 }
-    }
+    } 
 })
 
 export default router

@@ -4,6 +4,7 @@
 import nProgress from "nprogress";
 import 'nprogress/nprogress.css'
 import axios from "axios";
+import store from "@/store";
 // 创建axios实例
 const request = axios.create({
     // 前置url
@@ -14,6 +15,12 @@ const request = axios.create({
 // 请求拦截器
 request.interceptors.request.use(config => {
     // 发送请求之前做点啥
+    // 将游客的uuid存入请求头携带给服务器
+    if (store.state.detail.uuid_token) {
+        // (userTempId是和后端商量好的字段)
+        config.headers.userTempId = store.state.detail.uuid_token
+    }
+
     // 进度条开始
     nProgress.start()
     return config
