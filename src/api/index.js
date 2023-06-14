@@ -22,3 +22,9 @@ export const getCartList = () => request.get('/cart/cartList')
 export const deleteCart = (skuId) => request.delete(`/cart/deleteCart/${skuId}`)
 // 切换购物车中商品选中状态
 export const checkCart = (skuId, isChecked) => request.get(`/cart/checkCart/${skuId}/${isChecked}`)
+// 获取验证码
+export const reqGetCode = (phone) => request.get(`/user/passport/sendCode/${phone}`)
+// 用户注册
+export const reqRegister = (data) => request.post(`/user/passport/register`, data)
+// 用户登录
+export const reqLogin = (data) => request.post(`/user/passport/login`, data)

@@ -16,7 +16,7 @@
                 <ul class="cart-list" v-for="item in cartInfoList" :key="item.id">
                     <li class="cart-list-con1">
                         <input type="checkbox" name="chk_list" :checked="item.isChecked"
-                            @click="checkCartGoods(item.skuId, item.isChecked)">
+                            @click="checkCartGoods(item.skuId, $event)">
                     </li>
                     <li class="cart-list-con2">
                         <img :src="item.imgUrl">
@@ -44,17 +44,17 @@
         </div>
         <div class="cart-tool">
             <div class="select-all">
-                <input class="chooseAll" type="checkbox" :checked="isAllChecked">
+                <input class="chooseAll" type="checkbox" :checked="isAllChecked" @click="toggleSelectAll($event)">
                 <span>全选</span>
             </div>
             <div class="option">
-                <a href="#none">删除选中的商品</a>
+                <a href="javascript:;" @click="deleteAllChecked">删除选中的商品</a>
                 <a href="#none">移到我的关注</a>
                 <a href="#none">清除下柜商品</a>
             </div>
             <div class="money-box">
                 <div class="chosed">已选择
-                    <span>0</span>件商品
+                    <span>{{ goodsCount }}</span>件商品
                 </div>
                 <div class="sumprice">
                     <em>总价(不含运费):</em>
@@ -69,13 +69,13 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 import throttle from 'lodash/throttle'
 export default {
     name: 'ShopCart',
     data() {
         return {
-
+            
         }
     },
     computed: {
@@ -90,6 +90,10 @@ export default {
         totalPrice() {
             let sum = 0
             this.cartInfoList.forEach(item => {
+                // console.log(item)
+                // 若商品处于未勾选状态,则不计入总价
+                if (!item.isChecked)
+                    return
                 sum += item.skuNum * item.skuPrice
             });
             return sum
@@ -98,16 +102,23 @@ export default {
         isAllChecked() {
             return this.cartInfoList.every(item => item.isChecked === 1)
         },
-        // 商品总数
+        // 待结算商品数
         goodsCount() {
-
-        }
+            let sum = 0
+            this.cartInfoList.forEach(item => {
+                if (!item.isChecked)
+                    return
+                sum += item.skuNum
+            });
+            return sum
+        },
     },
     methods: {
         // 获取用户购物车中的商品数据
         getData() {
             this.$store.dispatch('cartList')
         },
+
         // 处理用户对购物车中商品数量的修改
         // 参数1:用户对商品数量的操作类型(增加/减少/直接输入)
         // 参数2:商品数目的变化量(需要发送给服务器的数据)
@@ -152,15 +163,35 @@ export default {
                 alert(error.message)
             }
         },
+
         // 修改购物车商品选中状态
-        checkCartGoods(skuId, isChecked) {
+        async checkCartGoods(skuId, event) {
             try {
-                this.$store.dispatch('checkCartGoods', { skuId, isChecked })
+                await this.$store.dispatch('checkCartGoods', { skuId, isChecked: event.target.checked ? '1' : '0' })
                 this.getData()
             } catch (error) {
                 alert(error.message)
             }
+        },
 
+        // 删除购物车中选中的全部商品
+        async deleteAllChecked() {
+            try {
+                await this.$store.dispatch('deleteAllChecked')
+                this.getData()
+            } catch (error) {
+                alert(error.message)
+            }
+        },
+
+        // 全选/反选购物车商品
+        async toggleSelectAll(event) {
+            try {
+                await this.$store.dispatch('toggleSelectAll', event.target.checked ? '1' : '0')
+                this.getData()
+            } catch (error) {
+                alert(error.message)
+            }
         }
     },
     mounted() {
