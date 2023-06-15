@@ -5,10 +5,14 @@
       <div class="container">
         <div class="loginList">
           <p>尚品汇欢迎您！</p>
-          <p>
+          <p v-if="!userName">
             <span>请</span>
             <router-link to="/login">登录</router-link>
             <router-link class="register" to="/register">免费注册</router-link>
+          </p>
+          <p v-else>
+            <a href="javascript:;">{{ userName }}</a>
+            <a href="javascript:;" class="register" @click="userLogout">退出登录</a>
           </p>
         </div>
         <div class="typeList">
@@ -44,14 +48,18 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
+  name: 'Header',
   data() {
     return {
       keyword: '',
       placeholderText: ''
     }
   },
-  name: '',
+  computed: {
+    ...mapState({ userName: (state) => state.user.userInfo.name })
+  },
   methods: {
     goSearch() {
       // 判断输入框是否为空
@@ -70,7 +78,17 @@ export default {
       this.keyword = ''
       this.placeholderText = ''
     },
-  },
+    // 用户退出登录
+    async userLogout() {
+      try {
+        await this.$store.dispatch('userLogout')
+        // 跳转到home路由
+        this.$router.push('/')
+      } catch (error) {
+        alert(error.message)
+      }
+    }
+  }
 };
 </script>
 

@@ -28,3 +28,7 @@ export const reqGetCode = (phone) => request.get(`/user/passport/sendCode/${phon
 export const reqRegister = (data) => request.post(`/user/passport/register`, data)
 // 用户登录
 export const reqLogin = (data) => request.post(`/user/passport/login`, data)
+// 获取用户信息(携带用户token向服务器获取数据)
+export const reqUserInfo = () => request.get(`/user/passport/auth/getUserInfo`)
+// 退出登录
+export const reqLogout = () => request.get(`/user/passport/logout`)

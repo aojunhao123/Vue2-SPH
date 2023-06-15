@@ -2,6 +2,7 @@
 
 import Vue from "vue";
 import VueRouter from "vue-router";
+import store from "@/store";
 Vue.use(VueRouter)
 
 // 重写push和replace方法
@@ -70,13 +71,53 @@ const router = new VueRouter({
         },
         {
             path: '/shopcart',
-            component:ShopCart
+            component: ShopCart
         }
     ],
     // 控制页面滚动行为
     scrollBehavior(to, from, savedPosition) {
         return { x: 0, y: 0 }
-    } 
+    }
+})
+
+router.beforeEach(async (to, from, next) => {
+    let token = store.state.user.token
+    let name = store.state.user.userInfo.name
+    // 若用户已登录
+    if (token) {
+        // 登录状态下禁止用户访问登录和注册路由
+        if (to.path === '/login' || to.path === '/register') {
+            alert('您已登录!!!')
+            next('/')
+        }
+        // 若用户访问登录注册以外的其他路由
+        else {
+            // 判断是否获取了用户信息(用户信息存储在vuex中无法持久化)
+            if (name) {
+                next()
+            }
+            // 若无用户信息
+            else {
+                try {
+                    // 派发action获取用户信息
+                    await store.dispatch('userInfo')
+                    next()
+                } catch (error) {
+                    // 可能出错的情况:token过期
+                    // 清除token
+                    await store.dispatch('userLogout')
+                    // 重新登录
+                    next('/login')
+                }
+
+            }
+        }
+    }
+    // 若用户未登录
+    else {
+        // 想去哪就去哪
+        next()
+    }
 })
 
 export default router

@@ -34,6 +34,8 @@ export default {
   },
   mounted() {
     this.$store.dispatch('floorList')
+    // 获取用户登录后的信息
+    this.$store.dispatch('userInfo')
   }
 };
 </script>

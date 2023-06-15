@@ -34,7 +34,7 @@
               </label>
               <span class="forget">忘记密码？</span>
             </div>
-            <button class="btn" @click="login">登&nbsp;&nbsp;录</button>
+            <button class="btn" @click.prevent="login">登&nbsp;&nbsp;录</button>
 
           </form>
           <div class="call clearFix">
@@ -70,7 +70,7 @@ export default {
         const { phone, password } = this
         // 检验手机号和密码是否填写
         if (phone && password) {
-          this.$store.dispatch('userLogin', { phone, password })
+          await this.$store.dispatch('userLogin', { phone, password })
           // 跳转到首页
           this.$router.push('/')
         }
@@ -78,7 +78,9 @@ export default {
       } catch (error) {
         alert(error.message)
       }
-    }
+    },
+
+
   }
 }
 </script>
