@@ -4,6 +4,8 @@ import App from './App.vue'
 import router from './router'
 // 引入store
 import store from './store'
+// 统一引入API
+import * as API from '@/api'
 // 引入要全局注册的组件
 import TypeNav from '@/components/TypeNav'
 import Carousel from '@/components/Carousel'
@@ -18,6 +20,14 @@ import 'swiper/swiper-bundle.min.css'
 Vue.component(TypeNav.name, TypeNav)
 Vue.component(Carousel.name, Carousel)
 Vue.component(Pagination.name, Pagination)
+
+// 引入element-UI
+import { MessageBox, Button, Message } from 'element-ui'
+Vue.use(Button)
+Vue.prototype.$msgbox = MessageBox
+Vue.prototype.$alert = MessageBox.alert
+Vue.prototype.$message = Message
+// 关闭vue生产提示
 Vue.config.productionTip = false
 
 new Vue({
@@ -27,5 +37,6 @@ new Vue({
   beforeCreate() {
     // 安装全局事件总线
     Vue.prototype.$bus = this
+    Vue.prototype.$API = API
   }
 }).$mount('#app')

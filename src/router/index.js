@@ -39,6 +39,12 @@ import Register from '@/pages/Register'
 import Detail from '@/pages/Detail'
 import AddCartSuccess from '@/pages/AddCartSuccess'
 import ShopCart from '@/pages/ShopCart'
+import Trade from '@/pages/Trade'
+import Pay from '@/pages/Pay'
+import PaySuccess from '@/pages/PaySuccess'
+import Center from '@/pages/Center'
+import MyOrder from '@/pages/Center/MyOrder'
+import GroupOrder from '@/pages/Center/GroupOrder'
 // 创建路由实例对象管理路由映射
 const router = new VueRouter({
     routes: [
@@ -72,6 +78,84 @@ const router = new VueRouter({
         {
             path: '/shopcart',
             component: ShopCart
+        },
+        {
+            path: '/trade',
+            component: Trade,
+            // 路由独享守卫
+            beforeEnter(to, from, next) {
+                // 只允许用户通过shopcart路由访问该路由
+                if (from.path === '/shopcart') {
+                    next()
+                }
+                else {
+                    Vue.prototype.$message({
+                        message: '暂无权限查看!自动为您跳转到购物车~',
+                        type: 'warning',
+                        center: true,
+                        duration: 1000 // 弹框持续时间:1000 (ms)
+                    })
+                    next('/shopcart')
+                }
+            }
+        },
+        {
+            path: '/pay',
+            component: Pay,
+            // 只允许从trade路由跳转到pay路由
+            beforeEnter(to, from, next) {
+                if (from.path === '/trade') {
+                    next()
+                }
+                else {
+                    Vue.prototype.$message({
+                        message: '暂无权限查看!请先去购物~',
+                        type: 'warning',
+                        center: true,
+                        duration: 1000 // 弹框持续时间:1000 (ms)
+                    })
+                    next('/shopcart')
+                }
+            }
+        },
+        {
+            path: '/paysuccess',
+            component: PaySuccess,
+            // 只允许用户从pay路由进入到paysuccess
+            beforeEnter(to, from, next) {
+                if (from.path === '/trade') {
+                    next()
+                }
+                else {
+                    Vue.prototype.$message({
+                        message: '暂无权限查看!请先去购物~',
+                        type: 'warning',
+                        center: true,
+                        duration: 1000 // 弹框持续时间:1000 (ms)
+                    })
+                    next('/shopcart')
+                }
+            }
+        },
+        {
+            path: '/center',
+            component: Center,
+            // 配置二级路由
+            children: [
+                {
+                    path: 'myorder',
+                    component: MyOrder
+                },
+                {
+                    path: 'grouporder',
+                    component: GroupOrder
+                },
+                {
+                    path: '',
+                    // 重定向到myorder路由
+                    redirect: 'myorder'
+                }
+            ]
         }
     ],
     // 控制页面滚动行为
@@ -80,6 +164,7 @@ const router = new VueRouter({
     }
 })
 
+// 全局路由前置守卫
 router.beforeEach(async (to, from, next) => {
     let token = store.state.user.token
     let name = store.state.user.userInfo.name
@@ -109,14 +194,28 @@ router.beforeEach(async (to, from, next) => {
                     // 重新登录
                     next('/login')
                 }
-
             }
         }
     }
     // 若用户未登录
     else {
-        // 想去哪就去哪
-        next()
+        // 用户想访问以下路由
+        let toPath = to.path;
+        if (toPath.indexOf('/trade') !== -1 || toPath.indexOf('/center') !== -1 || toPath.indexOf('/pay') !== -1) {
+            // 弹出警告消息
+            Vue.prototype.$message({
+                message: '请先登录!',
+                type: 'warning',
+                center: true,
+                duration: 1000
+            })
+            // 跳转至登录页面,同时将用户未登录时想去的路由路径存储在query参数中
+            next('/login?redirect=' + toPath)
+        }
+        // 若访问其他路由则放行
+        else {
+            next()
+        }
     }
 })
 

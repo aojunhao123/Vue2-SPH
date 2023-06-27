@@ -1,0 +1,46 @@
+[
+    {
+        "cosignee": "嘉然",
+        "fullAddress": "美丽的枝江",
+        "id": "123",
+        "isDefault": "0",
+        "phoneNum": "183123456",
+        "provinceId": "1",
+        "regionId": "1",
+        "userAddress": "美丽的枝江",
+        "userId": "2"
+    },
+    {
+        "cosignee": "丽丽",
+        "fullAddress": "一口一把泪",
+        "id": "124",
+        "isDefault": "0",
+        "phoneNum": "183123456",
+        "provinceId": "1",
+        "regionId": "1",
+        "userAddress": "一口一窥内",
+        "userId": "3"
+    },
+    {
+        "cosignee": "珈乐",
+        "fullAddress": "皇家猪圈圈",
+        "id": "125",
+        "isDefault": "0",
+        "phoneNum": "183123456",
+        "provinceId": "1",
+        "regionId": "1",
+        "userAddress": "英国臭泔水",
+        "userId": "4"
+    },
+    {
+        "cosignee": "丁真",
+        "fullAddress": "太美丽了理塘",
+        "id": "126",
+        "isDefault": "1",
+        "phoneNum": "183123456",
+        "provinceId": "1",
+        "regionId": "1",
+        "userAddress": "太美丽了理塘",
+        "userId": "5"
+    }
+]

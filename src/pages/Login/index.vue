@@ -71,16 +71,15 @@ export default {
         // 检验手机号和密码是否填写
         if (phone && password) {
           await this.$store.dispatch('userLogin', { phone, password })
-          // 跳转到首页
-          this.$router.push('/')
+          // 判断当前路由的query参数中是否包含重定向路径
+          const path = this.$route.query.redirect || '/'
+          this.$router.push(path)
         }
         else return alert('手机号或密码不能为空!')
       } catch (error) {
         alert(error.message)
       }
     },
-
-
   }
 }
 </script>

@@ -48,14 +48,14 @@ export default {
         },
         // 连续页码的末尾
         pageEnd() {
+            // 最大分页数小于连续分页(非正常情况3)
+            if (this.maxPage < this.continues)
+                return this.maxPage
             // pageStart出现负数的情况(非正常情况1)
             if (this.pageNo <= Math.floor(this.continues / 2))
                 return this.continues
             // pageEnd大于最大页码(非正常情况2)
             if (this.pageNo + Math.floor(this.continues / 2) > this.maxPage)
-                return this.maxPage
-            // 最大分页数小于连续分页(非正常情况3)
-            if (this.maxPage < this.continues)
                 return this.maxPage
             return this.pageNo + Math.floor(this.continues / 2)
         },
