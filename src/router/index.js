@@ -50,38 +50,39 @@ const router = new VueRouter({
     routes: [
         {
             path: '/detail/:skuId',
-            component: Detail
+            // 路由懒加载
+            component: () => import('@/pages/Detail')
         },
         {
             path: '/',
-            component: Home
+            component: () => import('@/pages/Home')
         },
         {
             name: 'search',
             // 声明params参数,'?'代表该参数非必要
             path: '/search/:keyword?',
-            component: Search
+            component: () => import('@/pages/Search')
         },
         {
             path: '/login',
-            component: Login
+            component: () => import('@/pages/Login')
         },
         {
             path: '/register',
-            component: Register
+            component: () => import('@/pages/Register')
         },
         {
             name: 'addcartsuccess',
             path: '/addcartsuccess',
-            component: AddCartSuccess
+            component: () => import('@/pages/AddCartSuccess')
         },
         {
             path: '/shopcart',
-            component: ShopCart
+            component: () => import('@/pages/ShopCart')
         },
         {
             path: '/trade',
-            component: Trade,
+            component: () => import('@/pages/Trade'),
             // 路由独享守卫
             beforeEnter(to, from, next) {
                 // 只允许用户通过shopcart路由访问该路由
@@ -101,7 +102,7 @@ const router = new VueRouter({
         },
         {
             path: '/pay',
-            component: Pay,
+            component: () => import('@/pages/Pay'),
             // 只允许从trade路由跳转到pay路由
             beforeEnter(to, from, next) {
                 if (from.path === '/trade') {
@@ -120,7 +121,7 @@ const router = new VueRouter({
         },
         {
             path: '/paysuccess',
-            component: PaySuccess,
+            component: () => import('@/pages/PaySuccess'),
             // 只允许用户从pay路由进入到paysuccess
             beforeEnter(to, from, next) {
                 if (from.path === '/trade') {
@@ -139,7 +140,7 @@ const router = new VueRouter({
         },
         {
             path: '/center',
-            component: Center,
+            component: () => import('@/pages/Center'),
             // 配置二级路由
             children: [
                 {

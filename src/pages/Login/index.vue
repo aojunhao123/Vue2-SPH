@@ -18,13 +18,11 @@
             <div class="input-text clearFix">
               <i></i>
               <input type="text" placeholder="手机号" v-model="phone">
-              <span class="error-msg">错误提示信息</span>
             </div>
 
             <div class="input-text clearFix">
               <i class="pwd"></i>
               <input type="password" placeholder="请输入密码" v-model="password">
-              <span class="error-msg">错误提示信息</span>
             </div>
 
             <div class="setting clearFix">

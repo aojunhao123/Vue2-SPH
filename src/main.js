@@ -27,6 +27,19 @@ Vue.use(Button)
 Vue.prototype.$msgbox = MessageBox
 Vue.prototype.$alert = MessageBox.alert
 Vue.prototype.$message = Message
+
+// 引入表单验证插件
+import '@/plugins/validate'
+
+// 引入vue-lazyload
+// import VueLazyload from 'vue-lazyload'
+// Vue.use(VueLazyload, {
+//   loading: './assets/logo.png'
+// })
+
+
+
+
 // 关闭vue生产提示
 Vue.config.productionTip = false
 
